@@ -1,0 +1,12 @@
+[settings]
+os=Android
+os.api_level=21
+arch=armv8
+compiler=clang
+compiler.version=9
+compiler.libcxx=c++_shared
+compiler.cppstd=14
+build_type=Debug
+
+[conf]
+tools.android:ndk_path=/home/mjc/Android/sdk/ndk/21.4.7075529

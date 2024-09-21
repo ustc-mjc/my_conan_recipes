@@ -1,7 +1,10 @@
 sources:
   "2.0.3":
-    url: "https://sourceforge.net/projects/opencore-amr/files/fdk-aac/fdk-aac-2.0.3.tar.gz"
-    sha256: "829b6b89eef382409cda6857fd82af84fabb63417b08ede9ea7a553f811cb79e"
+    # url: "https://sourceforge.net/projects/opencore-amr/files/fdk-aac/fdk-aac-2.0.3.tar.gz"
+    filename: "fdk-aac-2.0.3.tar.gz"
+    url: "https://blog.hellomjc.xyz:9001/mjc/conan_recipes_srcs/fdk-aac/fdk-aac-2.0.3.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=wfozid9oUPWkyODxsffS%2F20240920%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240920T070923Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=8f24ea7e6c193431051e2d7a4818fef22cfcd748ce35632378f3081e329e073c"
+    # sha256: "829b6b89eef382409cda6857fd82af84fabb63417b08ede9ea7a553f811cb79e"
+    sha256: "84acc0a0c233be0ec3d319b2d8ec18526664e0f3dffae3e5245a6aa71b078fc2"
   "2.0.2":
     url: "https://sourceforge.net/projects/opencore-amr/files/fdk-aac/fdk-aac-2.0.2.tar.gz"
     sha256: "c9e8630cf9d433f3cead74906a1520d2223f89bcd3fa9254861017440b8eb22f"

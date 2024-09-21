@@ -1,8 +1,28 @@
 [settings]
 os=iOS
-os.version=9.0
+os.version=11.0
+os.sdk=iphoneos
 arch=armv8
 compiler=apple-clang
-compiler.version=12.0
+compiler.version=15
 compiler.libcxx=libc++
-build_type=Debug
+build_type=Release
+
+[options]
+libfdk_aac*:shared=False
+libfdk_aac*:fPIC=True
+
+[conf]
+tools.apple:sdk_path=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.2.sdk
+
+[buildenv]
+CC=$(xcrun -find clang)
+CXX=$(xcrun -find clang++)
+LD=$(xcrun -find ld)
+AR=$(xcrun -find ar)
+AS=$(xcrun -find as)
+RANLIB=$(xcrun -find ranlib)
+STRIP=$(xcrun -find strip)
+# CFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path)"
+# CXXFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path)"
+# LDFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path)"

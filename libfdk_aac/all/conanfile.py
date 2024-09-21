@@ -1,5 +1,5 @@
 from conan import ConanFile
-from conan.tools.apple import fix_apple_shared_install_name
+from conan.tools.apple import fix_apple_shared_install_name, is_apple_os
 from conan.tools.cmake import CMake, CMakeToolchain, cmake_layout
 from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import chdir, copy, get, rename, replace_in_file, rm, rmdir
@@ -63,7 +63,7 @@ class LibFDKAACConan(ConanFile):
             basic_layout(self, src_folder="src")
 
     def build_requirements(self):
-        if not self._use_cmake and not is_msvc(self):
+        if not is_apple_os(self) and not self._use_cmake and not is_msvc(self):
             self.tool_requires("libtool/2.4.7")
             if self._settings_build.os == "Windows":
                 self.win_bash = True
@@ -75,7 +75,14 @@ class LibFDKAACConan(ConanFile):
 
     def generate(self):
         if self._use_cmake:
-            tc = CMakeToolchain(self)
+            generator = None
+            if self.settings.os == "iOS":
+                generator = 'Xcode'
+            tc = CMakeToolchain(self, generator)
+            if self.settings.os == "iOS" and generator == "Xcode":
+                tc.variables['CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY'] = ''
+                tc.variables['CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED'] = 'NO'
+                tc.variables['CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED'] = 'NO'
             tc.variables["BUILD_PROGRAMS"] = False
             tc.variables["FDK_AAC_INSTALL_CMAKE_CONFIG_MODULE"] = False
             tc.variables["FDK_AAC_INSTALL_PKGCONFIG_MODULE"] = False

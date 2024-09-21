@@ -21,6 +21,7 @@ required_conan_version = ">=1.57.0"
 
 class FFMpegConan(ConanFile):
     name = "ffmpeg"
+    version = "7.0.1"
     url = "https://github.com/conan-io/conan-center-index"
     description = "A complete, cross-platform solution to record, convert and stream audio and video"
     # https://github.com/FFmpeg/FFmpeg/blob/master/LICENSE.md
@@ -128,44 +129,44 @@ class FFMpegConan(ConanFile):
         "swscale": True,
         "postproc": True,
         "avfilter": True,
-        "with_asm": True,
-        "with_zlib": True,
-        "with_bzip2": True,
-        "with_lzma": True,
-        "with_libiconv": True,
-        "with_freetype": True,
-        "with_openjpeg": True,
-        "with_openh264": True,
-        "with_opus": True,
-        "with_vorbis": True,
+        "with_asm": False,
+        "with_zlib": False,
+        "with_bzip2": False,
+        "with_lzma": False,
+        "with_libiconv": False,
+        "with_freetype": False,
+        "with_openjpeg": False,
+        "with_openh264": False,
+        "with_opus": False,
+        "with_vorbis": False,
         "with_zeromq": False,
         "with_sdl": False,
         "with_libx264": True,
-        "with_libx265": True,
-        "with_libvpx": True,
+        "with_libx265": False,
+        "with_libvpx": False,
         "with_libmp3lame": True,
         "with_libfdk_aac": True,
-        "with_libwebp": True,
+        "with_libwebp": False,
         "with_ssl": "openssl",
-        "with_libalsa": True,
-        "with_pulse": True,
-        "with_vaapi": True,
-        "with_vdpau": True,
+        "with_libalsa": False,
+        "with_pulse": False,
+        "with_vaapi": False,
+        "with_vdpau": False,
         "with_vulkan": False,
-        "with_xcb": True,
-        "with_appkit": True,
-        "with_avfoundation": True,
-        "with_coreimage": True,
-        "with_audiotoolbox": True,
-        "with_videotoolbox": True,
-        "with_programs": True,
-        "with_libsvtav1": True,
-        "with_libaom": True,
-        "with_libdav1d": True,
+        "with_xcb": False,
+        "with_appkit": False,
+        "with_avfoundation": False,
+        "with_coreimage": False,
+        "with_audiotoolbox": False,
+        "with_videotoolbox": False,
+        "with_programs": False,
+        "with_libsvtav1": False,
+        "with_libaom": False,
+        "with_libdav1d": False,
         "with_libdrm": False,
         "with_jni": False,
         "with_mediacodec": False,
-        "with_xlib": True,
+        "with_xlib": False,
         "disable_everything": False,
         "disable_all_encoders": False,
         "disable_encoders": None,
@@ -274,7 +275,8 @@ class FFMpegConan(ConanFile):
         if not self._version_supports_libsvtav1:
             self.options.rm_safe("with_libsvtav1")
         if self.settings.os == "Android":
-            del self.options.with_libfdk_aac
+            # del self.options.with_libfdk_aac
+            pass
 
     def configure(self):
         if self.options.shared:

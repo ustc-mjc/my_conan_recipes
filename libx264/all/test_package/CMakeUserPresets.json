@@ -1,0 +1,11 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/Users/bytedance/conan_packages/create_conan_packages/conan-center-index/recipes/libx264/all/test_package/build/clang-11-armv8-14-release/generators/CMakePresets.json",
+        "build/apple-clang-15-armv8-release/generators/CMakePresets.json",
+        "build/clang-11-armv8-14-release/generators/CMakePresets.json"
+    ]
+}

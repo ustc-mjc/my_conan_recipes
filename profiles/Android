@@ -3,10 +3,14 @@ os=Android
 os.api_level=21
 arch=armv8
 compiler=clang
-compiler.version=9
+compiler.version=11
 compiler.libcxx=c++_shared
 compiler.cppstd=14
-build_type=Debug
+build_type=Release
+
+[options]
+libfdk_aac/*:shared=False
+libfdk_aac/*:fPIC=True
 
 [conf]
-tools.android:ndk_path=/home/mjc/Android/sdk/ndk/21.4.7075529
+tools.android:ndk_path=/Users/bytedance/Library/Android/sdk/ndk/22.1.7171670

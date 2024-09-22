@@ -16,13 +16,15 @@ libfdk_aac*:fPIC=True
 tools.apple:sdk_path=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.2.sdk
 
 [buildenv]
-CC=$(xcrun -find clang)
-CXX=$(xcrun -find clang++)
-LD=$(xcrun -find ld)
-AR=$(xcrun -find ar)
-AS=$(xcrun -find as)
-RANLIB=$(xcrun -find ranlib)
-STRIP=$(xcrun -find strip)
+# CC=$(xcrun -find clang)
+CC=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
+# CXX=$(xcrun -find clang++)
+CXX=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
+# LD=$(xcrun -find ld)
+# AR=$(xcrun -find ar)
+# AS=$(xcrun -find as)
+# RANLIB=$(xcrun -find ranlib)
+# STRIP=$(xcrun -find strip)
 # CFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path)"
 # CXXFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path)"
 # LDFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path)"

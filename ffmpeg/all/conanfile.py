@@ -323,7 +323,8 @@ class FFMpegConan(ConanFile):
         if self.options.with_libwebp:
             self.requires("libwebp/1.3.2")
         if self.options.with_ssl == "openssl":
-            self.requires("openssl/[>=1.1 <4]")
+            # self.requires("openssl/[>=1.1 <4]")
+            self.requires("openssl/3.3.1")
         if self.options.get_safe("with_libalsa"):
             self.requires("libalsa/1.2.10")
         if self.options.get_safe("with_xcb") or self.options.get_safe("with_xlib"):
@@ -427,11 +428,11 @@ class FFMpegConan(ConanFile):
         if self.options.with_ssl == "openssl":
             # https://trac.ffmpeg.org/ticket/5675
             openssl_libs = load(self, os.path.join(self.build_folder, "openssl_libs.list"))
-            replace_in_file(self, os.path.join(self.source_folder, "configure"),
-                                  "check_lib openssl openssl/ssl.h SSL_library_init -lssl -lcrypto -lws2_32 -lgdi32 ||",
-                                  f"check_lib openssl openssl/ssl.h OPENSSL_init_ssl {openssl_libs} || ")
+            # replace_in_file(self, os.path.join(self.source_folder, "configure"),
+            #                       "check_lib openssl openssl/ssl.h SSL_library_init -lssl -lcrypto -lws2_32 -lgdi32 ||",
+            #                       f"check_lib openssl openssl/ssl.h OPENSSL_init_ssl {openssl_libs} || ")
 
-        replace_in_file(self, os.path.join(self.source_folder, "configure"), "echo libx264.lib", "echo x264.lib")
+        # replace_in_file(self, os.path.join(self.source_folder, "configure"), "echo libx264.lib", "echo x264.lib")
 
     @property
     def _default_compilers(self):
@@ -622,7 +623,11 @@ class FFMpegConan(ConanFile):
             args.append("--disable-programs")
         # since ffmpeg"s build system ignores CC and CXX
         compilers_from_conf = self.conf.get("tools.build:compiler_executables", default={}, check_type=dict)
-        buildenv_vars = VirtualBuildEnv(self).vars()
+        if self.settings.os == "Android":
+            buildenv_vars =  tc.vars()
+        else:
+            buildenv_vars = VirtualBuildEnv(self).vars()
+
         nm = buildenv_vars.get("NM")
         if nm:
             args.append(f"--nm={unix_path(self, nm)}")
@@ -642,7 +647,7 @@ class FFMpegConan(ConanFile):
         cxx = compilers_from_conf.get("cpp", buildenv_vars.get("CXX", self._default_compilers.get("cxx")))
         if cxx:
             args.append(f"--cxx={unix_path(self, cxx)}")
-        ld = buildenv_vars.get("LD")
+        ld = buildenv_vars.get("LD") if not self.settings.os == "Android" else ""
         if ld:
             args.append(f"--ld={unix_path(self, ld)}")
         ranlib = buildenv_vars.get("RANLIB")
@@ -661,6 +666,9 @@ class FFMpegConan(ConanFile):
         if self.settings.compiler == "apple-clang" and Version(self.settings.compiler.version) >= "15":
             # Workaround for link error "ld: building exports trie: duplicate symbol '_av_ac3_parse_header'"
             tc.extra_ldflags.append("-Wl,-ld_classic")
+            if self.settings.os == "iOS":
+                tc.extra_cflags.extend(["-Wno-implicit-function-declaration"])
+                print("WARNING: AppleClang 15+ requires -Wno-implicit-function-declaration")
         if cross_building(self):
             args.append(f"--target-os={self._target_os}")
             if is_apple_os(self) and self.options.with_audiotoolbox:
@@ -670,6 +678,20 @@ class FFMpegConan(ConanFile):
             args.append("--extra-cflags={}".format(" ".join(tc.cflags)))
         if tc.ldflags:
             args.append("--extra-ldflags={}".format(" ".join(tc.ldflags)))
+        if self.settings.os == "Android":
+            ndk_root = self.conf.get("tools.android:ndk_path", buildenv_vars.get("NDK_ROOT"))
+            # INFO: Conan package android-ndk does not expose toolchain path. Looks fragile but follows always same for Android NDK
+            build_os = {"Linux": "linux", "Macos": "darwin", "Windows": "windows"}.get(str(self._settings_build.os))
+            # toolchain = os.path.join(ndk_root, "toolchains", "llvm", "prebuilt", f"{build_os}-{self._settings_build.arch}")
+            if build_os == "darwin":
+                toolchain = os.path.join(ndk_root, "toolchains", "llvm", "prebuilt", f"{build_os}-x86_64")
+            else:
+                toolchain = os.path.join(ndk_root, "toolchains", "llvm", "prebuilt", f"{build_os}-{self._settings_build.arch}")
+            sysroot = self.conf.get("tools.build:sysroot", buildenv_vars.get("SYSROOT", f"{toolchain}/sysroot"))
+            # cross_prefix = os.path.join(toolchain, "bin", "llvm-")
+            # cross_prefix = os.path.join(toolchain, "bin", "aarch64-linux-android-")
+            # args.append(f"--cross-prefix={cross_prefix}")
+            args.append(f"--sysroot={sysroot}")
         tc.configure_args.extend(args)
         tc.generate()
 
